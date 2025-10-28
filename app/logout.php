@@ -3,25 +3,29 @@
  * @title: Proyecto integrador Ev01 - Salir sistema.
  * @description:  Script para salir borrando la sesión
  *
- * @version    0.2
+ * @version    0.3
  *
  * @author     Ander Frago & Miguel Goyena <miguel_goyena@cuatrovientos.org>
+ * @Update:    Adaptado para proyecto Futbol
  */
 
-//TODO completa los requiere que necesites
+// header.php ya inicia la sesión y carga SessionHelper
 $dir = __DIR__;
 require_once $dir . '/../templates/header.php';
+// require_once $dir . '/../utils/SessionHelper.php'; // Ya incluido en header.php
 
-if (isset($_SESSION['user']))
+if (SessionHelper::loggedIn()) // Mejor comprobar con la función
 {
-  SessionHelper::destroySession();
-  echo "<div class='main'>Has salido de tu sesión. " ;
-  // redirección a la pantalla principal
-  header('Location: ./../index.php');
+    SessionHelper::destroySession();
+    // echo "<div class='main'>Has salido de tu sesión. " ; // No es necesario mostrar mensaje si redirigimos
+    // redirección a la pantalla principal
+    header('Location: ./../index.php');
+    exit();
 }
-else echo "<div class='main'><br>" .
-  "No puedes salir de sesión por que no estas registrado";
+else {
+    // Si no había sesión, simplemente redirigimos al inicio
+    header('Location: ./../index.php');
+    exit();
+}
 ?>
-<br><br></div>
-</body>
-</html>
+<!-- El HTML restante no es necesario si siempre redirigimos -->

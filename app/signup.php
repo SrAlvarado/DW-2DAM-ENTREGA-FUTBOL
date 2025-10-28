@@ -26,13 +26,19 @@ if (isset($_POST['email'])) {
 
     } else {
 
-        $userDAO = new UserDAO;
+        $userDAO = new UserDAO(); // Instanciamos el DAO
 
-        if ($userDAO->checkExists($user, $pass)) {
-            $userDAO->insert($user, $pass);
+        if ($userDAO->checkUserExists($user)) {
+            $error = "El email '$user' ya está registrado.<br><br>";
+        } else {
+            if ($userDAO->insert($user, $pass)) {
+                SessionHelper::setSession($user);
+                header('Location: ./../index.php');
+                exit();
+            } else {
+                $error = "Error al registrar el usuario.<br><br>";
+            }
         }
-
-        SessionHelper::setSession($user);
     }
 }
 ?>
@@ -64,7 +70,7 @@ if (isset($_POST['email'])) {
             <div class="col-md-3">
                 <div class="form-control-feedback">
                     <span class="text-danger align-middle">
-                        <i class="fa fa-close"></i>
+                         <?php echo $error; ?>
                     </span>
                 </div>
             </div>

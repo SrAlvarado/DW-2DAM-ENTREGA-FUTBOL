@@ -1,10 +1,7 @@
 <?php
 require 'GenericDAO.php';
-
 class UserDAO extends GenericDAO {
-
-  //Se define una constante con el nombre de la tabla
-  const USER_TABLE = 'usuarios';
+const USER_TABLE = 'usuarios';
 
   public function selectAll() {
     $query = "SELECT * FROM " . UserDAO::USER_TABLE;
@@ -21,8 +18,6 @@ class UserDAO extends GenericDAO {
     return $users;
   }
 
-
-
   public function insert($nombre, $password) {
     $query = "INSERT INTO " . UserDAO::USER_TABLE .
       " (nombre, password) VALUES(?,?)";
@@ -33,14 +28,30 @@ class UserDAO extends GenericDAO {
 
   public function checkExists($nombre, $password) {
     $query = "SELECT nombre, password FROM " . UserDAO::USER_TABLE . " WHERE nombre=? AND password=?";
-    $stmt = mysqli_prepare($this->conn, $query);
-    mysqli_stmt_bind_param($stmt, 'ss', $nombre, $password);
-    if(mysqli_stmt_execute($stmt)>0)
-      return true;
-    else
-      return false;
-  }
+      $stmt = mysqli_prepare($this->conn, $query);
+      mysqli_stmt_bind_param($stmt, 'ss', $nombre, $password);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_store_result($stmt); // Almacenar el resultado
 
+      if(mysqli_stmt_num_rows($stmt) > 0) {
+          return true; // El usuario y la contraseña coinciden
+      } else {
+          return false; // No coinciden
+      }
+  }
+    public function checkUserExists($nombre) {
+        $query = "SELECT nombre FROM " . UserDAO::USER_TABLE . " WHERE nombre=?";
+        $stmt = mysqli_prepare($this->conn, $query);
+        mysqli_stmt_bind_param($stmt, 's', $nombre);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt); // Almacenar el resultado
+
+        if(mysqli_stmt_num_rows($stmt) > 0) {
+            return true; // El usuario ya existe
+        } else {
+            return false; // El usuario no existe
+        }
+    }
 
   public function selectById($id) {
     $query = "SELECT nombre, password FROM " . UserDAO::USER_TABLE . " WHERE idUser=?";
@@ -64,9 +75,9 @@ class UserDAO extends GenericDAO {
     $query = "UPDATE " . UserDAO::USER_TABLE .
       " SET nombre=?, password=?"
       . " WHERE idUser=?";
-    $stmt = mysqli_prepare($this->conn, $query);
-    mysqli_stmt_bind_param($stmt, 'sssi', $nombre, $password, $id);
-    return $stmt->execute();
+      $stmt = mysqli_prepare($this->conn, $query);
+      mysqli_stmt_bind_param($stmt, 'sssi', $nombre, $password, $id);
+      return $stmt->execute();
   }
 
   public function delete($id) {

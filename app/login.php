@@ -12,41 +12,41 @@
 $dir = __DIR__;
 require_once $dir . '/../templates/header.php';
 require_once $dir . '/../utils/SessionHelper.php';
+require_once $dir . '/../persistence/DAO/UserDAO.php';
 
-// Al pulsar el boton del formulario se recarga la misma página, volviendo a ejecutar este script.
-// En caso de que se haya  completado los valores del formulario se verifica la existencia de usuarios en la base de datos
-// para los valores introducidos.
+
 $error = "";
 if (isset($_POST['user']))
 {
-  $user = $_POST['user'];
-  $pass = $_POST['pass'];
-  
-  if ($user == "" || $pass == "")
-      $error = "Debes completar todos los campos<br>";
-  else
-  {
-    
-    //TODO Comprueba que es correcta el User y PASS
-    if ($user == )
-    {
-      $error = "<span class='error'>Email/Contraseña invalida</span><br><br>";
+    $user = $_POST['user'];
+    $pass = $_POST['pass'];
+
+    if ($user == "" || $pass == "") {
+        $error = "Debes completar todos los campos<br>";
+    } else {
+
+        // Comprueba que es correcta el User y PASS
+        $userDAO = new UserDAO();
+        if (!$userDAO->checkExists($user, $pass)) // Usamos el DAO
+        {
+            $error = "<span class='error'>Email/Contraseña inválida</span><br><br>";
+        }
+        else
+        {
+            // Realiza la gestión de la sesión de usuario utilizando SessionHelper
+            SessionHelper::setSession($user);
+
+            // En caso de un registro  exitoso hacemos la redireccion correspondiente
+            header('Location: ./../index.php');
+            exit(); // Importante salir después de una redirección
+        }
     }
-    else
-    {
-      // TODO Realiza la gestión de la sesión de usuario utilizando SessionHelper
-      
-        
-      // TODO En caso de un registro  exitoso hacemos la redireccion correspondiente
-      
-    }
-  }
 }
-// TODO En caso de que no se haya completado el formulario,
-// analizamos si hay variable de sesión almacenada, volvemos a utilizar el SessionHelper
-else if (){
-    // TODO En caso de que exista variable de sesión redireccionamos a la página principal
-     
+
+else if (SessionHelper::loggedIn()){
+    // En caso de que exista variable de sesión redireccionamos a la página principal
+    header('Location: ./../index.php');
+    exit(); // Importante salir después de una redirección
 }
 ?>
 <div class="container">
@@ -93,7 +93,6 @@ else if (){
               <div class="col-md-3">
                   <div class="form-control-feedback">
                       <span class="text-danger align-middle">
-                      <?php echo $error ?>
                       </span>
                   </div>
               </div>
