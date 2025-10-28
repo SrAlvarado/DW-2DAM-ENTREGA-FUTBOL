@@ -32,12 +32,8 @@ if (!SessionHelper::loggedIn()) {
         header('Location: partidosEquipo.php?id_equipo=' . $id_equipo);
         exit();
     } else {
-        // Requisito: "La página de entrada mostrará un menu con 2 opciones: Equipos y Partidos"
-        // Si está logueado y no ha visto ningún equipo, va a la lista de equipos.
         header('Location: equipos.php');
         exit();
     }
 }
-
-// El HTML de bienvenida ya no es necesario, este fichero solo redirige.
 ?>
