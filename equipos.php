@@ -3,16 +3,18 @@
  * @title: Página de Equipos
  * @description: Muestra la lista de equipos y permite añadir nuevos.
  *
- * @version    1.0
+ * @version    1.1
  *
  * @author     Markel Alvarado
  */
 
-$dir = __DIR__;
-require_once $dir . '/templates/header.php';
-require_once $dir . '/persistence/DAO/EquipoDAO.php';
 
-// Redirigir si no está logueado
+$rootDir = __DIR__;
+
+require_once $rootDir . '/templates/header.php';
+
+require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
+
 if (!SessionHelper::loggedIn()) {
     header('Location: ./app/login.php');
     exit();
@@ -21,7 +23,6 @@ if (!SessionHelper::loggedIn()) {
 $equipoDAO = new EquipoDAO();
 $error = $nombre = $estadio = "";
 
-// Lógica para AÑADIR equipo (cuando se envía el formulario)
 if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
     $nombre = $_POST['nombre'];
     $estadio = $_POST['estadio'];
@@ -30,7 +31,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
         $error = "Debes completar todos los campos.";
     } else {
         if ($equipoDAO->insert($nombre, $estadio)) {
-            // Éxito, redirigir a la misma página para limpiar el POST
             header('Location: equipos.php');
             exit();
         } else {
@@ -39,14 +39,12 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
     }
 }
 
-// Lógica para MOSTRAR equipos (se ejecuta siempre)
 $equipos = $equipoDAO->selectAll();
 
 ?>
 
 <div class="container mt-4">
     <div class="row">
-        <!-- Columna para la lista de equipos -->
         <div class="col-md-8">
             <h2>Equipos de la Competición</h2>
             <hr>
@@ -61,7 +59,7 @@ $equipos = $equipoDAO->selectAll();
                 <?php foreach ($equipos as $equipo): ?>
                     <tr>
                         <td>
-                            <!-- Enlace a la futura página PartidosEquipo.php -->
+                            <!-- Enlace a PartidosEquipo.php -->
                             <a href="partidosEquipo.php?id_equipo=<?php echo $equipo['id_equipo']; ?>">
                                 <?php echo htmlspecialchars($equipo['nombre']); ?>
                             </a>
@@ -115,3 +113,4 @@ $equipos = $equipoDAO->selectAll();
         </div>
     </div>
 </div>
+

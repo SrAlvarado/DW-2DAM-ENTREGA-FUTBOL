@@ -25,28 +25,25 @@ if (isset($_POST['user']))
         $error = "Debes completar todos los campos<br>";
     } else {
 
-        // Comprueba que es correcta el User y PASS
+
         $userDAO = new UserDAO();
-        if (!$userDAO->checkExists($user, $pass)) // Usamos el DAO
+        if (!$userDAO->checkExists($user, $pass))
         {
             $error = "<span class='error'>Email/Contraseña inválida</span><br><br>";
         }
         else
         {
-            // Realiza la gestión de la sesión de usuario utilizando SessionHelper
             SessionHelper::setSession($user);
 
-            // En caso de un registro  exitoso hacemos la redireccion correspondiente
             header('Location: ./../index.php');
-            exit(); // Importante salir después de una redirección
+            exit();
         }
     }
 }
 
 else if (SessionHelper::loggedIn()){
-    // En caso de que exista variable de sesión redireccionamos a la página principal
     header('Location: ./../index.php');
-    exit(); // Importante salir después de una redirección
+    exit();
 }
 ?>
 <div class="container">

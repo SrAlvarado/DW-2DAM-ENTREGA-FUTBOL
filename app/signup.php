@@ -26,7 +26,7 @@ if (isset($_POST['email'])) {
 
     } else {
 
-        $userDAO = new UserDAO(); // Instanciamos el DAO
+        $userDAO = new UserDAO();
 
         if ($userDAO->checkUserExists($user)) {
             $error = "El email '$user' ya está registrado.<br><br>";

@@ -8,8 +8,6 @@
  * @author     Markel Alvarado
  */
 
-// No extendemos GenericDAO porque su firma de métodos es incorrecta para equipos.
-// Usamos PersistentManager directamente.
 $dir = __DIR__;
 require_once $dir . '/../conf/PersistentManager.php';
 
