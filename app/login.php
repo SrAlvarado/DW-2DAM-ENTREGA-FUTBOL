@@ -1,20 +1,19 @@
-
 <?php
 /**
  * @title: Proyecto integrador Ev01 - Acceso al sistema.
  * @description:  Script PHP para acceder al sistema
  *
- * @version    0.1
+ * @version    1.1 - Estilos mejorados
  *
  * @author ander_frago@cuatrovientos.org miguel_goyena@cuatrovientos.org
  */
 
 $dir = __DIR__;
 require_once $dir . '/../templates/header.php';
-require_once $dir . '/../utils/SessionHelper.php';
 require_once $dir . '/../persistence/DAO/UserDAO.php';
+// SessionHelper ya se carga en el header
 
-
+// Al pulsar el boton del formulario se recarga la misma página, volviendo a ejecutar este script.
 $error = "";
 if (isset($_POST['user']))
 {
@@ -22,83 +21,75 @@ if (isset($_POST['user']))
     $pass = $_POST['pass'];
 
     if ($user == "" || $pass == "") {
-        $error = "Debes completar todos los campos<br>";
+        $error = "Debes completar todos los campos";
     } else {
-
-
         $userDAO = new UserDAO();
-        if (!$userDAO->checkExists($user, $pass))
+
+        // Comprueba que es correcta el User y PASS
+        if (!$userDAO->checkUserExists($user, $pass))
         {
-            $error = "<span class='error'>Email/Contraseña inválida</span><br><br>";
+            $error = "Email o Contraseña inválida";
         }
         else
         {
+            // Realiza la gestión de la sesión de usuario
             SessionHelper::setSession($user);
 
+            // Redireccion correspondiente a la página principal (index.php)
             header('Location: ./../index.php');
             exit();
         }
     }
 }
-
+// Analizamos si hay variable de sesión almacenada
 else if (SessionHelper::loggedIn()){
+    // En caso de que exista variable de sesión redireccionamos a la página principal
     header('Location: ./../index.php');
     exit();
 }
 ?>
-<div class="container">
-  <form class="form-horizontal" role="form" method="POST" action="login.php">
-          <div class="row">
-              <div class="col-md-3"></div>
-              <div class="col-md-6">
-                  <h2>Introduzca detalles del acceso</h2>
-                  <hr>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-md-3"></div>
-              <div class="col-md-6">
-                  <div class="form-group has-danger">
-                      <label class="sr-only" for="email">Email:</label>
-                      <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                          <div class="input-group-addon" style="width: 2.6rem"></div>
-                          <input type="text" name="user" class="form-control" id="email"
-                                 placeholder="yoxti@ejemplo.com" required autofocus>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-3">
-                  <div class="form-control-feedback">
-                      <span class="text-danger align-middle">
-                          <i class="fa fa-close"></i>  <?php  echo $error  ?>
-                      </span>
-                  </div>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-md-3"></div>
-              <div class="col-md-6">
-                  <div class="form-group">
-                      <label class="sr-only" for="pass">Contraseña:</label>
-                      <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                          <div class="input-group-addon" style="width: 2.6rem"></div>
-                          <input type="password" name="pass" class="form-control" id="password"
-                                 placeholder="Contraseña" required>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-3">
-                  <div class="form-control-feedback">
-                      <span class="text-danger align-middle">
-                      </span>
-                  </div>
-              </div>
-          </div>
-          <div class="row" style="padding-top: 1rem">
-              <div class="col-md-3"></div>
-              <div class="col-md-6">
-                  <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Acceder</button>
-              </div>
-          </div>
-      </form>
-  </div>
+
+<!-- Contenedor centrado vertical y horizontalmente -->
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-header bg-dark text-white text-center">
+                <h3 class="font-weight-light my-3">Acceso al Sistema</h3>
+            </div>
+            <div class="card-body p-4">
+                <form class="form-horizontal" role="form" method="POST" action="login.php">
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="user" class="form-control" id="email"
+                               placeholder="yoxti@ejemplo.com" required autofocus>
+                        <label for="email">Email:</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="password" name="pass" class="form-control" id="password"
+                               placeholder="Contraseña" required>
+                        <label for="pass">Contraseña:</label>
+                    </div>
+
+                    <?php if ($error): ?>
+                        <div class="alert alert-danger text-center" role="alert">
+                            <?php echo $error; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="d-grid mt-4 mb-0">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Acceder
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center py-3">
+                <div class="small">
+                    <a href="signup.php">¿No tienes cuenta? Regístrate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

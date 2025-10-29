@@ -59,4 +59,14 @@ class SessionHelper {
       return false;
     }
   }
+
+  static function getUser(): string{
+      self::startSessionIfNotStarted();
+      if (isset($_SESSION['user'])) {
+          return $_SESSION['user'];
+      } else {
+          return "Invitado";
+      }
+  }
+
 }

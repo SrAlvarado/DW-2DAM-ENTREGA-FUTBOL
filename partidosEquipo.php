@@ -1,108 +1,122 @@
 <?php
 /**
  * @title: Página de Partidos por Equipo
- * @description: Muestra el historial de partidos de un equipo específico.
- * Guarda el equipo consultado en la sesión.
+ * @description: Muestra los partidos de un equipo específico.
  *
- * @version    1.0
+ * @version    1.2 - Estilos mejorados
  *
- * @author    Markel Alvarado
+ * @author     Tu Nombre
  */
 
-$rootDirPartidosEquipo = __DIR__;
-require_once $rootDirPartidosEquipo . '/templates/header.php';
-require_once $rootDirPartidosEquipo . '/persistence/DAO/EquipoDAO.php';
-require_once $rootDirPartidosEquipo . '/persistence/DAO/PartidoDAO.php';
+$rootDir = __DIR__;
+require_once $rootDir . '/templates/header.php';
+require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
+require_once $rootDir . '/persistence/DAO/PartidoDAO.php';
+// SessionHelper ya está en header.php
 
+// 1. Redirigir si no está logueado
 if (!SessionHelper::loggedIn()) {
     header('Location: ./app/login.php');
     exit();
 }
 
-$id_equipo = $_GET['id_equipo'] ?? null;
-
-if ($id_equipo === null || !is_numeric($id_equipo)) {
+// 2. Validar ID de Equipo
+if (!isset($_GET['id_equipo']) || !is_numeric($_GET['id_equipo'])) {
     header('Location: equipos.php');
     exit();
 }
 
-SessionHelper::startSessionIfNotStarted();
-$_SESSION['equipo_consultado'] = $id_equipo;
+$id_equipo = $_GET['id_equipo'];
 
+// 3. Lógica de la Sesión (Guardar la visita)
+// (Esto se hace ANTES de cualquier salida HTML)
+$_SESSION['last_team_visited'] = $id_equipo;
+
+
+// 4. Lógica de la Página
 $equipoDAO = new EquipoDAO();
-$equipo = $equipoDAO->selectById($id_equipo);
-
 $partidoDAO = new PartidoDAO();
+
+$equipo = $equipoDAO->selectById($id_equipo);
 $partidos = $partidoDAO->selectByEquipo($id_equipo);
 
-if ($equipo === null) {
+// Si el equipo no existe, volver a la lista
+if (!$equipo) {
     header('Location: equipos.php');
     exit();
 }
+
 ?>
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="display-5">Partidos de: <?php echo htmlspecialchars($equipo['nombre']); ?></h2>
-            <h4 class="text-muted">Estadio: <?php echo htmlspecialchars($equipo['estadio']); ?></h4>
-            <hr>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                <tr>
-                    <th>Jornada</th>
-                    <th>Equipo Local</th>
-                    <th>Equipo Visitante</th>
-                    <th>Resultado (1X2)</th>
-                    <th>Estadio del Partido</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($partidos as $partido): ?>
-                    <tr>
-                        <td><?php echo $partido['jornada']; ?></td>
-
-                        <!-- Resaltamos el nombre de nuestro equipo -->
-                        <td>
-                            <?php if ($partido['nombre_local'] == $equipo['nombre']): ?>
-                                <strong><?php echo htmlspecialchars($partido['nombre_local']); ?></strong>
-                            <?php else: ?>
-                                <?php echo htmlspecialchars($partido['nombre_local']); ?>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <?php if ($partido['nombre_visitante'] == $equipo['nombre']): ?>
-                                <strong><?php echo htmlspecialchars($partido['nombre_visitante']); ?></strong>
-                            <?php else: ?>
-                                <?php echo htmlspecialchars($partido['nombre_visitante']); ?>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <?php if ($partido['resultado']): ?>
-                                <span class="fw-bold fs-5"><?php echo $partido['resultado']; ?></span>
-                            <?php else: ?>
-                                <span class="text-muted">Pendiente</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo htmlspecialchars($partido['estadio_partido']); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-
-                <?php if (empty($partidos)): ?>
-                    <tr>
-                        <td colspan="5" class="text-center">Este equipo no ha jugado ningún partido todavía.</td>
-                    </tr>
-                <?php endif; ?>
-                </tbody>
-            </table>
-
-            <a href="equipos.php" class="btn btn-secondary mt-3">Volver a la lista de equipos</a>
+<!-- Jumbotron / Bloque de bienvenida -->
+<div class="container">
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+        <div class="container-fluid py-3">
+            <h1 class="display-5 fw-bold"><?php echo htmlspecialchars($equipo['nombre']); ?></h1>
+            <p class="col-md-8 fs-4">
+                Estadio: <?php echo htmlspecialchars($equipo['estadio']); ?>
+            </p>
+            <a href="equipos.php" class="btn btn-primary btn-lg">&larr; Volver a Equipos</a>
         </div>
     </div>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h2 class="h5 mb-0">Partidos del <?php echo htmlspecialchars($equipo['nombre']); ?></h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Jornada</th>
+                                <th>Equipo Local</th>
+                                <th>Equipo Visitante</th>
+                                <th>Resultado (1X2)</th>
+                                <th>Estadio</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($partidos as $partido): ?>
+                                <tr>
+                                    <td>Jornada <?php echo htmlspecialchars($partido['jornada']); ?></td>
+
+                                    <!-- Resaltar nuestro equipo en negrita -->
+                                    <td>
+                                        <?php if ($partido['nombre_local'] == $equipo['nombre']): ?>
+                                            <strong><?php echo htmlspecialchars($partido['nombre_local']); ?></strong>
+                                        <?php else: ?>
+                                            <?php echo htmlspecialchars($partido['nombre_local']); ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($partido['nombre_visitante'] == $equipo['nombre']): ?>
+                                            <strong><?php echo htmlspecialchars($partido['nombre_visitante']); ?></strong>
+                                        <?php else: ?>
+                                            <?php echo htmlspecialchars($partido['nombre_visitante']); ?>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <td classD="fw-bold fs-5 text-center"><?php echo htmlspecialchars($partido['resultado']); ?></td>
+                                    <td><?php echo htmlspecialchars($partido['estadio_partido']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+
+                            <?php if (empty($partidos)): ?>
+                                <tr>
+                                    <td colspan="5" class="text-center">Este equipo no ha jugado ningún partido todavía.</td>
+                                </tr>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
