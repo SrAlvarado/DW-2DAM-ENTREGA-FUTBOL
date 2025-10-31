@@ -106,10 +106,10 @@ El proyecto estará accesible en tu navegador en la dirección: `https://ed.team
 
 Este proyecto ha sido desarrollado por:
 
-* **Nombre Completo:** [Tu Nombre y Apellidos]
+* **Nombre Completo:** [Markel Alvarado garin]
 * **GitHub:** [@SrAlvarado](https://github.com/SrAlvarado)
-* **Correo Electrónico:** [Tu correo electrónico]
+* **Correo Electrónico:** [markel.alvarado@gmail.com]
 
 ## 📜 Licencia
 
-Este proyecto se distribuye bajo la licencia **MIT**. Para más detalles, consulta el archivo [LICENSE](LICENSE) (si planeas incluir uno).
+Este proyecto se distribuye bajo la licencia **MIT**. Para más detalles, consulta el archivo [LICENSE](LICENSE).
