@@ -5,7 +5,7 @@
  *
  * @version    1.1 - Estilos mejorados
  *
- * @author     Ander Frago & Miguel Goyena <miguel_goyena@cuatrovientos.org>
+ * @author     Ander Frago & Miguel Goyena (Modificado por Markel Alvarado)
  */
 
 rutasAFicherosInternos();

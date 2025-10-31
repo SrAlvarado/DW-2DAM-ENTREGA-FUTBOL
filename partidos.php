@@ -36,58 +36,6 @@ if (isset($_GET['jornada'])) {
 
 $partidos_jornada = $partidoDAO->selectByJornada($jornada_actual);
 $equipos = $equipoDAO->selectAll();
-
-/**
- * @return void
- */
-function rutasAFicheros(): void
-{
-    $rootDir = __DIR__;
-    require_once $rootDir . '/templates/header.php';
-    require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
-    require_once $rootDir . '/persistence/DAO/PartidoDAO.php';
-}
-
-/**
- * @return void
- */
-function moverALoginSiNoIniciadoSesion(): void
-{
-    if (!SessionHelper::loggedIn()) {
-        header('Location: ./app/login.php');
-        exit();
-    }
-}
-
-/**
- * @param $jornada
- * @param $id_local
- * @param $id_visitante
- * @param $resultado
- * @param PartidoDAO $partidoDAO
- * @return string|void
- */
-function controlDeErroresIntroducirPartido($jornada, $id_local, $id_visitante, $resultado, PartidoDAO $partidoDAO)
-{
-    if (empty($jornada) || empty($id_local) || empty($id_visitante) || empty($resultado)) {
-        $error = "Todos los campos son obligatorios.";
-    } elseif ($id_local == $id_visitante) {
-        $error = "Un equipo no puede jugar contra sí mismo.";
-    } elseif ($partidoDAO->checkPartidoExists($id_local, $id_visitante)) {
-        $error = "Estos dos equipos ya han jugado un partido.";
-    } elseif (!$partidoDAO->saberSiLaJornadaIntroducidaSigueElOrdenDeJornadas($jornada)) {
-        $error = "Introduce una jornada igual o mayor a la ultima";
-    } else {
-
-        if ($partidoDAO->insert($jornada, $id_local, $id_visitante, $resultado)) {
-            header('Location: partidos.php?jornada=' . $jornada);
-            exit();
-        } else {
-            $error = "Error al guardar el partido en la BBDD.";
-        }
-    }
-    return $error;
-}
 ?>
 
 <div class="container">
@@ -220,3 +168,55 @@ function controlDeErroresIntroducirPartido($jornada, $id_local, $id_visitante, $
         </div>
     </div>
 </div>
+<?php
+/**
+ * @return void
+ */
+function rutasAFicheros(): void
+{
+    $rootDir = __DIR__;
+    require_once $rootDir . '/templates/header.php';
+    require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
+    require_once $rootDir . '/persistence/DAO/PartidoDAO.php';
+}
+
+/**
+ * @return void
+ */
+function moverALoginSiNoIniciadoSesion(): void
+{
+    if (!SessionHelper::loggedIn()) {
+        header('Location: ./app/login.php');
+        exit();
+    }
+}
+
+/**
+ * @param $jornada
+ * @param $id_local
+ * @param $id_visitante
+ * @param $resultado
+ * @param PartidoDAO $partidoDAO
+ * @return string|void
+ */
+function controlDeErroresIntroducirPartido($jornada, $id_local, $id_visitante, $resultado, PartidoDAO $partidoDAO)
+{
+    if (empty($jornada) || empty($id_local) || empty($id_visitante) || empty($resultado)) {
+        $error = "Todos los campos son obligatorios.";
+    } elseif ($id_local == $id_visitante) {
+        $error = "Un equipo no puede jugar contra sí mismo.";
+    } elseif ($partidoDAO->checkPartidoExists($id_local, $id_visitante)) {
+        $error = "Estos dos equipos ya han jugado un partido.";
+    } elseif (!$partidoDAO->saberSiLaJornadaIntroducidaSigueElOrdenDeJornadas($jornada)) {
+        $error = "Introduce una jornada igual o mayor a la ultima";
+    } else {
+
+        if ($partidoDAO->insert($jornada, $id_local, $id_visitante, $resultado)) {
+            header('Location: partidos.php?jornada=' . $jornada);
+            exit();
+        } else {
+            $error = "Error al guardar el partido en la BBDD.";
+        }
+    }
+    return $error;
+}

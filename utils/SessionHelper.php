@@ -7,12 +7,12 @@
  *
  * @version    0.2
  *
- * @author     Ander Frago & Miguel Goyena <miguel_goyena@cuatrovientos.org>
+ * @author     Ander Frago & Miguel Goyena (Modificado por Markel Alvarado)
  */
 class SessionHelper {
 
   /**
-   * Checks if the session is not started. In that case, it calls start.
+   * Compreueba si la sesión está iniciada, si no lo está la inicia.
    */
   static function startSessionIfNotStarted() {
     if (session_status() == PHP_SESSION_NONE) {

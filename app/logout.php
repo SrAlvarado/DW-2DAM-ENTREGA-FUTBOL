@@ -5,7 +5,7 @@
  *
  * @version    0.3
  *
- * @author     Ander Frago & Miguel Goyena <miguel_goyena@cuatrovientos.org>
+ * @author     Ander Frago & Miguel Goyena (Modificado por Markel Alvarado)
  * @Update:    Adaptado para proyecto Futbol
  */
 
@@ -23,4 +23,4 @@ else {
     header('Location: ./../index.php');
     exit();
 }
-?>
+

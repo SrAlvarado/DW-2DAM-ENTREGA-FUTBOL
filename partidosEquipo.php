@@ -5,7 +5,7 @@
  *
  * @version    1.2 - Estilos mejorados
  *
- * @author     Tu Nombre
+ * @author    Markel Alvarado
  */
 
 rutasFicheros();

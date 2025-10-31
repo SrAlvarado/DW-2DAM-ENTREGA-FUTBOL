@@ -5,7 +5,7 @@
  *
  * @version    1.1 - Estilos mejorados
  *
- * @author ander_frago@cuatrovientos.org miguel_goyena@cuatrovientos.org
+ * @author ander_frago@cuatrovientos.org (Modificado por Markel Alvarado)
  */
 
 declararRutas();

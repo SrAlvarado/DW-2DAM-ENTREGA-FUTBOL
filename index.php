@@ -5,7 +5,7 @@
  *
  * @version    1.0
  *
- * @author     Tu Nombre
+ * @author     Markel Alvarado
  */
 
 $dir = __DIR__;

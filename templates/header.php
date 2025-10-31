@@ -5,7 +5,7 @@
  *
  * @version    1.2 - Estilos mejorados
  *
- * @author     Ander Frago & Miguel Goyena (Modificado por Tu Nombre)
+ * @author     Ander Frago & Miguel Goyena (Modificado por Markel Alvarado)
  */
 
 rutaASessionHelper();
