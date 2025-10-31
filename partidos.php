@@ -36,7 +36,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_partido') {
         $error = "Un equipo no puede jugar contra sí mismo.";
     } elseif ($partidoDAO->checkPartidoExists($id_local, $id_visitante)) {
         $error = "Estos dos equipos ya han jugado un partido.";
+    } elseif (!$partidoDAO->saberSiLaJornadaIntroducidaSigueElOrdenDeJornadas($jornada)) {
+        $error = "Introduce una jornada igual o mayor a la ultima";
     } else {
+
         if ($partidoDAO->insert($jornada, $id_local, $id_visitante, $resultado)) {
             header('Location: partidos.php?jornada=' . $jornada);
             exit();

@@ -110,7 +110,6 @@ class PartidoDAO {
         mysqli_stmt_execute($stmt);
         mysqli_stmt_store_result($stmt);
 
-        // Si el número de filas es mayor que 0, ya existe
         return mysqli_stmt_num_rows($stmt) > 0;
     }
 
@@ -130,6 +129,29 @@ class PartidoDAO {
         mysqli_stmt_bind_param($stmt, 'iiss', $jornada, $id_local, $id_visitante, $resultado);
 
         return $stmt->execute();
+    }
+
+    /**
+     * @param $jornadaIntroducida
+     * @return bool
+     *
+     * Pasada una jornada comprobar que exista en la bbdd, si no existe, se pondrá una jornada siguiente a la ultima
+     */
+        public function saberSiLaJornadaIntroducidaSigueElOrdenDeJornadas($jornadaIntroducida){
+        $query = "SELECT MAX(jornada) AS ultima_jornada FROM partidos";
+        $result = mysqli_query($this->conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        $ultima_jornada = $row['ultima_jornada'];
+
+        if ($ultima_jornada === null) {
+            return true;
+        }
+
+        return $jornadaIntroducida <= $ultima_jornada || $jornadaIntroducida == ($ultima_jornada + 1);
+    }
+
+}
+?>
     }
 }
 ?>
