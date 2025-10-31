@@ -8,48 +8,23 @@
  * @author ander_frago@cuatrovientos.org miguel_goyena@cuatrovientos.org
  */
 
-$dir = __DIR__;
-require_once $dir . '/../templates/header.php';
-require_once $dir . '/../persistence/DAO/UserDAO.php';
-// SessionHelper ya se carga en el header
+declararRutas();
 
-// Al pulsar el boton del formulario se recarga la misma página, volviendo a ejecutar este script.
 $error = "";
+
 if (isset($_POST['user']))
 {
     $user = $_POST['user'];
     $pass = $_POST['pass'];
 
-    if ($user == "" || $pass == "") {
-        $error = "Debes completar todos los campos";
-    } else {
-        $userDAO = new UserDAO();
-
-        // Comprueba que es correcta el User y PASS
-        if (!$userDAO->checkUserExists($user, $pass))
-        {
-            $error = "Email o Contraseña inválida";
-        }
-        else
-        {
-            // Realiza la gestión de la sesión de usuario
-            SessionHelper::setSession($user);
-
-            // Redireccion correspondiente a la página principal (index.php)
-            header('Location: ./../index.php');
-            exit();
-        }
-    }
+    $error = validacionesDeInicioSesion($user, $pass);
 }
-// Analizamos si hay variable de sesión almacenada
 else if (SessionHelper::loggedIn()){
-    // En caso de que exista variable de sesión redireccionamos a la página principal
     header('Location: ./../index.php');
     exit();
 }
 ?>
 
-<!-- Contenedor centrado vertical y horizontalmente -->
 <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-lg border-0 rounded-lg">
@@ -93,3 +68,37 @@ else if (SessionHelper::loggedIn()){
     </div>
 </div>
 
+<?php
+/**
+ * @return void
+ */
+function declararRutas(): void
+{
+    $dir = __DIR__;
+    require_once $dir . '/../templates/header.php';
+    require_once $dir . '/../persistence/DAO/UserDAO.php';
+}
+
+/**
+ * @param $user
+ * @param $pass
+ * @return string|void
+ */
+function validacionesDeInicioSesion($user, $pass)
+{
+    if ($user == "" || $pass == "") {
+        $error = "Debes completar todos los campos";
+    } else {
+        $userDAO = new UserDAO();
+
+        if (!$userDAO->checkUserExists($user, $pass)) {
+            $error = "Email o Contraseña inválida";
+        } else {
+            SessionHelper::setSession($user);
+
+            header('Location: ./../index.php');
+            exit();
+        }
+    }
+    return $error;
+}

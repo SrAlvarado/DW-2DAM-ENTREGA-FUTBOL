@@ -8,18 +8,10 @@
  * @author     Ander Frago & Miguel Goyena (Modificado por Tu Nombre)
  */
 
-$dir = __DIR__; // $dir es /templates
-require_once $dir . '/../utils/SessionHelper.php';
+rutaASessionHelper();
 
-// --- Lógica de Rutas ---
-$current_folder = basename(dirname($_SERVER['PHP_SELF']));
-$base_path = ($current_folder == 'app') ? '../' : './';
+list($path_to_app, $path_to_assets, $path_to_root) = declaracionDeRutasUtilizadasEnElFichero();
 
-$path_to_app = $base_path . 'app/';
-$path_to_assets = $base_path . 'assets/';
-$path_to_root = $base_path;
-
-// --- Lógica de Sesión ---
 SessionHelper::startSessionIfNotStarted();
 $loggedin = SessionHelper::loggedIn();
 $user = $_SESSION['user'] ?? '(Invitado)';
@@ -34,20 +26,19 @@ $user = $_SESSION['user'] ?? '(Invitado)';
     <meta http-equiv="x-ua-compatible" content="ie-edge">
     <link rel="stylesheet" href="<?php echo $path_to_assets; ?>bootstrap-5.3.8-dist/css/bootstrap.css">
 
-    <!-- Estilo para el fondo de la página -->
+
     <style>
         body {
-            background-color: #f8f9fa; /* Un gris muy claro */
+            background-color: #f8f9fa;
         }
         .navbar {
-            margin-bottom: 20px; /* Añade espacio debajo de la barra de navegación */
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
 
 <?php
-// En caso de tener una sesión registrada
 if ($loggedin)
 {
     ?>
@@ -82,7 +73,6 @@ if ($loggedin)
     <?php
 }
 else {
-    // En caso de ser usuario no registrado (Invitado)
     ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
@@ -106,8 +96,31 @@ else {
 }
 ?>
 
-<!-- JS de Bootstrap (Bundle incluye Popper.js, necesario para dropdowns) -->
 <script type="text/javascript" src="<?php echo $path_to_assets; ?>bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
+<?php
+/**
+ * @return void
+ */
+function rutaASessionHelper(): void
+{
+    $dir = __DIR__;
+    require_once $dir . '/../utils/SessionHelper.php';
+}
+
+
+/**
+ * @return string[]
+ */
+function declaracionDeRutasUtilizadasEnElFichero(): array
+{
+    $current_folder = basename(dirname($_SERVER['PHP_SELF']));
+    $base_path = ($current_folder == 'app') ? '../' : './';
+
+    $path_to_app = $base_path . 'app/';
+    $path_to_assets = $base_path . 'assets/';
+    $path_to_root = $base_path;
+    return array($path_to_app, $path_to_assets, $path_to_root);
+}

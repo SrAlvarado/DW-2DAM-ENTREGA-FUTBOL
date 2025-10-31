@@ -44,12 +44,12 @@ const USER_TABLE = 'usuarios';
         $stmt = mysqli_prepare($this->conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
         mysqli_stmt_execute($stmt);
-        mysqli_stmt_store_result($stmt); // Almacenar el resultado
+        mysqli_stmt_store_result($stmt);
 
         if(mysqli_stmt_num_rows($stmt) > 0) {
-            return true; // El usuario ya existe
+            return true;
         } else {
-            return false; // El usuario no existe
+            return false;
         }
     }
 

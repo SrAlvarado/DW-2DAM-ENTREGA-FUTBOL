@@ -9,7 +9,6 @@
  * @Update:    Adaptado para proyecto Futbol
  */
 
-// header.php ya inicia la sesión y carga SessionHelper
 $dir = __DIR__;
 require_once $dir . '/../templates/header.php';
 

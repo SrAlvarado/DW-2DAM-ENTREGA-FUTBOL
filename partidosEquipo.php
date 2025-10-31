@@ -8,19 +8,11 @@
  * @author     Tu Nombre
  */
 
-$rootDir = __DIR__;
-require_once $rootDir . '/templates/header.php';
-require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
-require_once $rootDir . '/persistence/DAO/PartidoDAO.php';
-// SessionHelper ya está en header.php
+rutasFicheros();
 
-// 1. Redirigir si no está logueado
-if (!SessionHelper::loggedIn()) {
-    header('Location: ./app/login.php');
-    exit();
-}
+redirigirALoginSiNoIniciadoSesion();
 
-// 2. Validar ID de Equipo
+
 if (!isset($_GET['id_equipo']) || !is_numeric($_GET['id_equipo'])) {
     header('Location: equipos.php');
     exit();
@@ -28,19 +20,14 @@ if (!isset($_GET['id_equipo']) || !is_numeric($_GET['id_equipo'])) {
 
 $id_equipo = $_GET['id_equipo'];
 
-// 3. Lógica de la Sesión (Guardar la visita)
-// (Esto se hace ANTES de cualquier salida HTML)
 $_SESSION['last_team_visited'] = $id_equipo;
 
-
-// 4. Lógica de la Página
 $equipoDAO = new EquipoDAO();
 $partidoDAO = new PartidoDAO();
 
 $equipo = $equipoDAO->selectById($id_equipo);
 $partidos = $partidoDAO->selectByEquipo($id_equipo);
 
-// Si el equipo no existe, volver a la lista
 if (!$equipo) {
     header('Location: equipos.php');
     exit();
@@ -48,7 +35,6 @@ if (!$equipo) {
 
 ?>
 
-<!-- Jumbotron / Bloque de bienvenida -->
 <div class="container">
     <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
         <div class="container-fluid py-3">
@@ -85,7 +71,6 @@ if (!$equipo) {
                                 <tr>
                                     <td>Jornada <?php echo htmlspecialchars($partido['jornada']); ?></td>
 
-                                    <!-- Resaltar nuestro equipo en negrita -->
                                     <td>
                                         <?php if ($partido['nombre_local'] == $equipo['nombre']): ?>
                                             <strong><?php echo htmlspecialchars($partido['nombre_local']); ?></strong>
@@ -120,3 +105,25 @@ if (!$equipo) {
     </div>
 </div>
 
+<?php
+/**
+ * @return void
+ */
+function rutasFicheros(): void
+{
+    $rootDir = __DIR__;
+    require_once $rootDir . '/templates/header.php';
+    require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
+    require_once $rootDir . '/persistence/DAO/PartidoDAO.php';
+}
+
+/**
+ * @return void
+ */
+function redirigirALoginSiNoIniciadoSesion(): void
+{
+    if (!SessionHelper::loggedIn()) {
+        header('Location: ./app/login.php');
+        exit();
+    }
+}

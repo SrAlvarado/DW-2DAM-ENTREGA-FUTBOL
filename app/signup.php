@@ -8,39 +8,20 @@
  * @author     Ander Frago & Miguel Goyena <miguel_goyena@cuatrovientos.org>
  */
 
-$dir = __DIR__;
-require_once $dir . '/../templates/header.php';
-require_once $dir . '/../persistence/DAO/UserDAO.php';
-// SessionHelper ya se carga en el header
+rutasAFicherosInternos();
 
 $error = $user = $pass = "";
+
 
 if (isset($_POST['email'])) {
 
     $user = $_POST['email'];
     $pass = $_POST['password'];
 
-    if ($user == "" || $pass == "") {
-        $error = "Debes completar todos los campos.";
-    } else {
-        $userDAO = new UserDAO();
-
-        if ($userDAO->checkUserExists($user)) {
-            $error = "Ese nombre de usuario (email) ya está registrado.";
-        } else {
-            // Insertamos el nuevo usuario
-            $userDAO->insert($user, $pass);
-
-            // Iniciamos sesión y redirigimos
-            SessionHelper::setSession($user);
-            header('Location: ./../index.php');
-            exit();
-        }
-    }
+    $error = validacionDeRegistroDeUsuario($user, $pass);
 }
 ?>
 
-<!-- Contenedor centrado vertical y horizontalmente -->
 <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-lg border-0 rounded-lg">
@@ -85,3 +66,39 @@ if (isset($_POST['email'])) {
     </div>
 </div>
 
+<?php
+/**
+ * @return void
+ */
+function rutasAFicherosInternos(): void
+{
+    $dir = __DIR__;
+    require_once $dir . '/../templates/header.php';
+    require_once $dir . '/../persistence/DAO/UserDAO.php';
+}
+
+
+/**
+ * @param $user
+ * @param $pass
+ * @return string|void
+ */
+function validacionDeRegistroDeUsuario($user, $pass)
+{
+    if ($user == "" || $pass == "") {
+        $error = "Debes completar todos los campos.";
+    } else {
+        $userDAO = new UserDAO();
+
+        if ($userDAO->checkUserExists($user)) {
+            $error = "Ese nombre de usuario (email) ya está registrado.";
+        } else {
+            $userDAO->insert($user, $pass);
+
+            SessionHelper::setSession($user);
+            header('Location: ./../index.php');
+            exit();
+        }
+    }
+    return $error;
+}

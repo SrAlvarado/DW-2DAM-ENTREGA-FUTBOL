@@ -8,37 +8,14 @@
  * @author    Markel Alvarado
  */
 
-$rootDir = __DIR__;
-require_once $rootDir . '/templates/header.php';
-require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
+rutasDeDirectorios();
 
-
-if (!SessionHelper::loggedIn()) {
-    header('Location: ./app/login.php');
-    exit();
-}
-
+enviarALoginSiNoHaIniciadoSesion();
 
 $equipoDAO = new EquipoDAO();
 $error = $nombre = $estadio = "";
 
-if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
-    $nombre = $_POST['nombre'];
-    $estadio = $_POST['estadio'];
-
-    if ($nombre == "" || $estadio == "") {
-        $error = "Debes completar todos los campos.";
-    } elseif ($equipoDAO->checkEquipoExists($nombre)) {
-        $error = "Este equipo ya existe.";
-    } else {
-        if ($equipoDAO->insert($nombre, $estadio)) {
-            header('Location: equipos.php');
-            exit();
-        } else {
-            $error = "Error al añadir el equipo (quizás ya existe).";
-        }
-    }
-}
+list($nombre, $estadio, $error) = validacionDeIntroduccionDeEquipos($nombre, $estadio, $error, $equipoDAO);
 
 $equipos = $equipoDAO->selectAll();
 
@@ -129,3 +106,56 @@ $equipos = $equipoDAO->selectAll();
         </div>
     </div>
 </div>
+
+<?php
+
+/**
+ * @return void
+ */
+function rutasDeDirectorios(): void
+{
+    $rootDir = __DIR__;
+    require_once $rootDir . '/templates/header.php';
+    require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
+}
+/**
+ * @return void
+ */
+function enviarALoginSiNoHaIniciadoSesion(): void
+{
+    if (!SessionHelper::loggedIn()) {
+        header('Location: ./app/login.php');
+        exit();
+    }
+}
+
+
+
+/**
+ * @param $nombre
+ * @param $estadio
+ * @param string $error
+ * @param EquipoDAO $equipoDAO
+ * @return array|void
+ */
+function validacionDeIntroduccionDeEquipos($nombre, $estadio, string $error, EquipoDAO $equipoDAO)
+{
+    if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
+        $nombre = $_POST['nombre'];
+        $estadio = $_POST['estadio'];
+
+        if ($nombre == "" || $estadio == "") {
+            $error = "Debes completar todos los campos.";
+        } elseif ($equipoDAO->checkEquipoExists($nombre)) {
+            $error = "Este equipo ya existe.";
+        } else {
+            if ($equipoDAO->insert($nombre, $estadio)) {
+                header('Location: equipos.php');
+                exit();
+            } else {
+                $error = "Error al añadir el equipo (quizás ya existe).";
+            }
+        }
+    }
+    return array($nombre, $estadio, $error);
+}
