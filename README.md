@@ -35,8 +35,8 @@ DW-2DAM-ENTREGA-FUTBOL/ ├── app/ # Scripts para lógica de autenticación 
 | Categoría | Tecnología | Versión |
 | :--- | :--- | :--- |
 | **Backend** | PHP (Nativo) | 7.x / 8.x |
-| **Base de Datos** | MySQL | [Versión utilizada] |
-| **Gestor de DB (Opcional)** | HeidiSQL | [Versión utilizada] |
+| **Base de Datos** | MySQL | - |
+| **Gestor de DB (Opcional)** | HeidiSQL | 12.12.0.7122 |
 | **Frontend** | HTML5, CSS3, JavaScript (Vanilla) | - |
 | **Framework/Librería CSS** | Bootstrap | 5.3.8 |
 
@@ -95,9 +95,9 @@ Asegúrate de tener instalados y configurados los siguientes componentes:
 
 Este proyecto ha sido desarrollado por:
 
-* **Nombre Completo:** [Tu Nombre y Apellidos]
+* **Nombre Completo:** [Markel Alvarado Garin]
 * **GitHub:** [@SrAlvarado](https://github.com/SrAlvarado)
-* **Correo Electrónico:** [Tu correo electrónico]
+* **Correo Electrónico:** [markel.alvarado@gmail.com]
 
 ## 📜 Licencia
 
