@@ -5,37 +5,33 @@
  *
  * @version    1.3 - Estilos mejorados
  *
- * @author     Tu Nombre
+ * @author    Markel Alvarado
  */
 
 $rootDir = __DIR__;
-
-// 1. Cargar el Header (que incluye SessionHelper)
 require_once $rootDir . '/templates/header.php';
-
-// 2. Cargar el DAO de Equipos (ruta directa desde la raíz)
 require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
 
-// 3. Redirigir si no está logueado
+
 if (!SessionHelper::loggedIn()) {
     header('Location: ./app/login.php');
     exit();
 }
 
-// 4. Lógica de la página
+
 $equipoDAO = new EquipoDAO();
 $error = $nombre = $estadio = "";
 
-// Lógica para AÑADIR equipo (cuando se envía el formulario)
 if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
     $nombre = $_POST['nombre'];
     $estadio = $_POST['estadio'];
 
     if ($nombre == "" || $estadio == "") {
         $error = "Debes completar todos los campos.";
+    } elseif ($equipoDAO->checkEquipoExists($nombre)) {
+        $error = "Este equipo ya existe.";
     } else {
         if ($equipoDAO->insert($nombre, $estadio)) {
-            // Éxito, redirigir a la misma página para limpiar el POST
             header('Location: equipos.php');
             exit();
         } else {
@@ -44,12 +40,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
     }
 }
 
-// Lógica para MOSTRAR equipos (se ejecuta siempre)
 $equipos = $equipoDAO->selectAll();
 
 ?>
 
-<!-- Jumbotron / Bloque de bienvenida -->
 <div class="container">
     <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
         <div class="container-fluid py-3">
@@ -61,7 +55,6 @@ $equipos = $equipoDAO->selectAll();
 
 <div class="container">
     <div class="row">
-        <!-- Columna para la lista de equipos -->
         <div class="col-md-8 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-dark text-white">
@@ -70,7 +63,7 @@ $equipos = $equipoDAO->selectAll();
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover mb-0">
-                            <thead class="table-light"> <!-- La cabecera de la tabla ya no es oscura, la card sí -->
+                            <thead class="table-light">
                             <tr>
                                 <th>Nombre del Equipo</th>
                                 <th>Estadio</th>
@@ -100,10 +93,9 @@ $equipos = $equipoDAO->selectAll();
             </div>
         </div>
 
-        <!-- Columna para el formulario -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
+                <div class="card-header bg-dark text-white">
                     <h2 class="h5 mb-0">Añadir Nuevo Equipo</h2>
                 </div>
                 <div class="card-body">
@@ -122,14 +114,13 @@ $equipos = $equipoDAO->selectAll();
                                    placeholder="Ej: Santiago Bernabéu" required
                                    value="<?php echo htmlspecialchars($estadio); ?>">
                         </div>
-
                         <?php if ($error): ?>
                             <div class="alert alert-danger" role="alert">
                                 <?php echo $error; ?>
                             </div>
                         <?php endif; ?>
 
-                        <button type="submit" class="btn btn-success w-100">
+                        <button type="submit" class="btn btn-success bg-dark w-100">
                             Añadir Equipo
                         </button>
                     </form>
@@ -138,4 +129,3 @@ $equipos = $equipoDAO->selectAll();
         </div>
     </div>
 </div>
-

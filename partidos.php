@@ -5,7 +5,7 @@
  *
  * @version    1.2 - Estilos mejorados
  *
- * @author     Tu Nombre
+ * @author    Markel Alvarado
  */
 
 $rootDir = __DIR__;
@@ -13,7 +13,6 @@ require_once $rootDir . '/templates/header.php';
 require_once $rootDir . '/persistence/DAO/EquipoDAO.php';
 require_once $rootDir . '/persistence/DAO/PartidoDAO.php';
 
-// 1. Redirigir si no está logueado
 if (!SessionHelper::loggedIn()) {
     header('Location: ./app/login.php');
     exit();
@@ -24,7 +23,6 @@ $partidoDAO = new PartidoDAO();
 $equipoDAO = new EquipoDAO();
 $error = "";
 
-// 3. Lógica de AÑADIR PARTIDO (si se envía el formulario)
 if (isset($_POST['action']) && $_POST['action'] == 'add_partido') {
     $jornada = $_POST['jornada'];
     $id_local = $_POST['id_local'];
@@ -39,7 +37,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_partido') {
     } elseif ($partidoDAO->checkPartidoExists($id_local, $id_visitante)) {
         $error = "Estos dos equipos ya han jugado un partido.";
     } else {
-        // Validación superada, insertar
         if ($partidoDAO->insert($jornada, $id_local, $id_visitante, $resultado)) {
             header('Location: partidos.php?jornada=' . $jornada);
             exit();
@@ -78,9 +75,7 @@ $equipos = $equipoDAO->selectAll(); // Para los dropdowns del formulario
 
 <div class="container">
     <div class="row">
-        <!-- Columna para la lista de partidos -->
         <div class="col-md-8 mb-4">
-            <!-- Formulario de selección de Jornada -->
             <div class="card shadow-sm">
                 <div class="card-header bg-dark text-white">
                     <h2 class="h5 mb-0">Resultados de la Jornada <?php echo htmlspecialchars($jornada_actual); ?></h2>
@@ -103,7 +98,6 @@ $equipos = $equipoDAO->selectAll(); // Para los dropdowns del formulario
                         </div>
                     </form>
 
-                    <!-- Tabla de Partidos -->
                     <div class="table-responsive">
                         <table class="table table-striped table-hover mb-0">
                             <thead class="table-light">
@@ -135,11 +129,9 @@ $equipos = $equipoDAO->selectAll(); // Para los dropdowns del formulario
                 </div>
             </div>
         </div>
-
-        <!-- Columna para el formulario de AÑADIR PARTIDO -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
+                <div class="card-header bg-dark text-white">
                     <h2 class="h5 mb-0">Añadir Nuevo Partido</h2>
                 </div>
                 <div class="card-body">
@@ -192,7 +184,7 @@ $equipos = $equipoDAO->selectAll(); // Para los dropdowns del formulario
                             </div>
                         <?php endif; ?>
 
-                        <button type="submit" class="btn btn-success w-100">
+                        <button type="submit" class="btn bg-dark btn-success w-100">
                             Añadir Partido
                         </button>
                     </form>

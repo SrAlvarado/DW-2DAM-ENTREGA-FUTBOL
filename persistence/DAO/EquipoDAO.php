@@ -12,8 +12,6 @@ $dir = __DIR__;
 require_once $dir . '/../conf/PersistentManager.php';
 
 class EquipoDAO {
-
-    //Conexión a BD
     protected $conn = null;
 
     public function __construct() {
@@ -57,7 +55,7 @@ class EquipoDAO {
         $stmt = mysqli_prepare($this->conn, $query);
         mysqli_stmt_bind_param($stmt, 'i', $id);
         mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt); // Obtenemos el resultado
+        $result = mysqli_stmt_get_result($stmt);
 
         $equipo = null;
         if ($equipoBD = mysqli_fetch_array($result)) {
@@ -68,6 +66,24 @@ class EquipoDAO {
             );
         }
         return $equipo;
+    }
+
+    /**
+     * Comprobar que el equipo a introducir no existe
+     */
+
+    public function checkEquipoExists($nombre) {
+        $query = "SELECT * FROM equipos WHERE nombre = ?";
+        $stmt = mysqli_prepare($this->conn, $query);
+        mysqli_stmt_bind_param($stmt, 's', $nombre);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($equipoBD = mysqli_fetch_array($result)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 ?>
