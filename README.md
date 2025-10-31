@@ -10,48 +10,48 @@
 
 Este repositorio contiene la **entrega final** de la asignatura **Desarrollo Web en Entorno Cliente/Servidor (DW)** del ciclo **2DAM**.
 
-El proyecto es una aplicación web enfocada en la gestión y visualización de datos relacionados con el mundo del fútbol. Su principal objetivo es demostrar las capacidades adquiridas en el desarrollo de una aplicación completa, que incluye la interacción con una base de datos, la implementación de una API (si aplica), y una interfaz de usuario dinámica y responsiva.
+El proyecto es una aplicación web de gestión y visualización de datos relacionados con el mundo del fútbol, desarrollado utilizando **PHP nativo (puro)** para la lógica de negocio y **MySQL** para la persistencia de datos.
 
-**Objetivo principal:** [Describir en una frase el propósito, ej: Gestionar un sistema de ligas, mostrar estadísticas de jugadores, simular partidos, etc.]
+**Objetivo principal:** Administrar y consultar información de equipos, partidos y usuarios de una liga de fútbol, demostrando el uso de PHP y MySQL bajo un patrón de diseño DAO.
 
 ## 🚀 Características Principales
 
-* **[Característica 1]:** [Ej: Interfaz de usuario intuitiva para la gestión de equipos.]
-* **[Característica 2]:** [Ej: Sistema de autenticación de usuarios (Login/Registro).]
-* **[Característica 3]:** [Ej: Muestra de datos de partidos en tiempo real o simulados.]
-* **[Característica 4]:** [Ej: CRUD completo para la administración de entidades (jugadores, equipos, etc.).]
-* **Diseño Responsivo:** Adaptable a diferentes tamaños de pantalla (móvil, tablet, escritorio).
-
-## 🛠️ Tecnologías Utilizadas
-
-Las siguientes tecnologías y herramientas se han utilizado en el desarrollo de este proyecto:
-
-| Categoría | Tecnología | Versión |
-| :--- | :--- | :--- |
-| **Backend** | [Lenguaje de Programación, ej: PHP, Node.js] | [Versión, ej: 8.1] |
-| **Framework Backend** | [Framework, ej: Laravel, Express] | [Versión, ej: 9.x] |
-| **Frontend** | [Lenguaje, ej: HTML5, CSS3, JavaScript] | - |
-| **Framework/Librería Frontend** | [Librería/Framework, ej: React, Vue, Bootstrap, Tailwind] | [Versión, ej: 5.x] |
-| **Base de Datos** | [Sistema, ej: MySQL, PostgreSQL, MongoDB] | [Versión, ej: 5.7] |
+* **Autenticación y Sesiones Seguras:** Implementación de un sistema completo de **Login y Registro** (`app/login.php`, `app/signup.php`) que maneja las sesiones de usuario (`utils/SessionHelper.php`) para controlar el acceso a la aplicación.
+* **Gestión de Equipos (CRUD):** Permite a los usuarios autorizados (administradores) realizar las operaciones **CRUD** (Crear, Leer, Actualizar, Eliminar) sobre la entidad de Equipos.
+* **Patrón DAO (Data Access Object):** Uso de una capa de persistencia (`persistence/DAO`) para separar la lógica de negocio de la lógica de acceso a datos, garantizando un código más modular.
+* **Sistema de Conexión Flexible:** La conexión a la base de datos MySQL se gestiona mediante la clase `PersistentManager`, que lee las credenciales de un archivo JSON (`persistence/conf/credentials.json`).
+* **Diseño Responsivo con Bootstrap:** La interfaz de usuario está completamente adaptada a diferentes dispositivos (móvil, tablet, escritorio) gracias a la librería **Bootstrap 5.3.8**.
+* **Integración con HeidiSQL:** La estructura de la base de datos se puede gestionar fácilmente con herramientas como HeidiSQL, utilizando el script SQL proporcionado.
 
 ## 📦 Estructura del Proyecto
 
 Una visión general de la distribución de archivos y carpetas más relevantes:
 
-DW-2DAM-ENTREGA-FUTBOL/ ├── [Carpeta Backend, ej: app/ o src/] │ ├── [Subcarpeta, ej: Controllers/] │ └── [Subcarpeta, ej: Models/] ├── [Carpeta Frontend, ej: public/ o resources/] │ ├── css/ │ ├── js/ │ └── views/ o pages/ ├── database/ │ ├── migrations/ │ └── seeders/ ├── .env.example ├── composer.json (si aplica) ├── package.json (si aplica) └── README.md
+DW-2DAM-ENTREGA-FUTBOL/ ├── app/ # Scripts para lógica de autenticación (login, signup, logout) ├── assets/ │ └── bootstrap-5.3.8-dist/ # Archivos estáticos de Bootstrap y JS ├── persistence/ # Capa de acceso a datos y configuración de la DB │ ├── DAO/ # Clases DAO (EquipoDAO, PartidoDAO, UserDAO) │ ├── conf/ # Configuración de la DB (PersistentManager.php, credentials.json) │ └── scripts/ # Archivo SQL para la creación de la DB ├── templates/ # Archivos de la interfaz reutilizables (ej: header.php, footer.php) ├── utils/ # Clases de utilidad (ej: SessionHelper.php) ├── equipos.php # Vista principal de gestión de equipos ├── index.php # Página de inicio ├── partidos.php # Vista de listado de partidos ├── partidosEquipo.php # Vista de partidos por equipo específico └── README.md
 
+
+## 🛠️ Tecnologías Utilizadas
+
+| Categoría | Tecnología | Versión |
+| :--- | :--- | :--- |
+| **Backend** | PHP (Nativo) | 7.x / 8.x |
+| **Base de Datos** | MySQL | [Versión utilizada] |
+| **Gestor de DB (Opcional)** | HeidiSQL | [Versión utilizada] |
+| **Frontend** | HTML5, CSS3, JavaScript (Vanilla) | - |
+| **Framework/Librería CSS** | Bootstrap | 5.3.8 |
 
 ## ⚙️ Instalación y Configuración
 
-Sigue estos pasos para levantar el proyecto en tu entorno local.
+Sigue estos pasos para levantar el proyecto en un entorno de servidor local.
 
 ### Prerrequisitos
 
-Asegúrate de tener instalados los siguientes componentes:
+Asegúrate de tener instalados y configurados los siguientes componentes:
 
-* [Servidor Local, ej: XAMPP, WAMP, MAMP, Docker]
-* [Lenguaje/Runtime, ej: PHP >= 8.0, Node.js >= 16]
-* [Herramienta de paquetes, ej: Composer (para PHP), npm/yarn (para Node.js)]
+* **Servidor Web con PHP:** XAMPP, WAMP, MAMP o un servidor Apache configurado.
+* **PHP:** Versión 7.x o superior.
+* **MySQL:** Servidor de bases de datos.
+* **Cliente de Base de Datos (Opcional):** HeidiSQL, phpMyAdmin, MySQL Workbench.
 
 ### Pasos
 
@@ -61,55 +61,44 @@ Asegúrate de tener instalados los siguientes componentes:
     cd DW-2DAM-ENTREGA-FUTBOL
     ```
 
-2.  **Configurar dependencias (Backend y Frontend):**
-    ```bash
-    # Si usas PHP/Composer
-    composer install
+2.  **Configurar el Servidor Local:**
+    * Mueve la carpeta `DW-2DAM-ENTREGA-FUTBOL` al directorio raíz de tu servidor (ej: `htdocs` en XAMPP).
 
-    # Si usas Node.js/npm/yarn
-    npm install
-    # o
-    yarn install
+3.  **Configurar la Base de Datos (MySQL):**
+    * Inicia tus servicios de MySQL.
+    * Utiliza tu cliente de DB (HeidiSQL, phpMyAdmin, etc.) para:
+        * Crear una nueva base de datos.
+        * Importar el script SQL para crear las tablas y los datos iniciales desde el archivo: `persistence/scripts/futbol_BD_Markel_Alvarado.sql`.
+
+4.  **Configurar la Conexión a la Base de Datos:**
+    * Edita el archivo de credenciales: `persistence/conf/credentials.json`.
+    * Actualiza los valores de `database`, `username` y `password` para que coincidan con la configuración de tu MySQL local:
+
+    ```json
+    {
+      "database": "[El nombre de la DB que creaste]",
+      "username": "[Tu usuario de MySQL, ej: root]",
+      "password": "[Tu contraseña de MySQL, ej: vacío o tu clave]",
+      "host": "localhost"
+    }
     ```
 
-3.  **Configuración del entorno:**
-    * Crea un archivo `.env` a partir del ejemplo: `cp .env.example .env`
-    * Edita el archivo `.env` con las credenciales de tu base de datos y otras variables necesarias (puertos, claves, etc.).
-    ```dotenv
-    DB_CONNECTION=[mysql o el que uses]
-    DB_HOST=127.0.0.1
-    DB_PORT=[Puerto, ej: 3306]
-    DB_DATABASE=[nombre_base_datos]
-    DB_USERNAME=[usuario_bd]
-    DB_PASSWORD=[contraseña_bd]
+5.  **Acceder a la Aplicación:**
+    * Asegúrate de que los servicios Apache y MySQL estén en ejecución.
+    * Abre tu navegador y accede a la URL base de tu proyecto. (Ejemplo basado en un servidor local):
+
     ```
-
-4.  **Preparar la Base de Datos:**
-    * Crea la base de datos con el nombre especificado en el `.env`.
-    * Ejecuta las migraciones:
-        ```bash
-        [Comando para migrar, ej: php artisan migrate]
-        ```
-    * (Opcional) Carga los datos iniciales/seeders:
-        ```bash
-        [Comando para seeders, ej: php artisan db:seed]
-        ```
-
-5.  **Iniciar la Aplicación:**
-    ```bash
-    [Comando para iniciar el servidor, ej: php artisan serve o npm start]
+    http://localhost/DW-2DAM-ENTREGA-FUTBOL/
     ```
-
-El proyecto estará accesible en tu navegador en la dirección: `https://ed.team/comunidad/conectar-al-localhost-8000`
 
 ## 👨‍💻 Autor
 
 Este proyecto ha sido desarrollado por:
 
-* **Nombre Completo:** [Markel Alvarado garin]
+* **Nombre Completo:** [Tu Nombre y Apellidos]
 * **GitHub:** [@SrAlvarado](https://github.com/SrAlvarado)
-* **Correo Electrónico:** [markel.alvarado@gmail.com]
+* **Correo Electrónico:** [Tu correo electrónico]
 
 ## 📜 Licencia
 
-Este proyecto se distribuye bajo la licencia **MIT**. Para más detalles, consulta el archivo [LICENSE](LICENSE).
+Este proyecto se distribuye bajo la licencia **MIT**. Para más detalles, consulta el archivo [LICENSE] (si decides incluir uno).
