@@ -8,14 +8,14 @@
  * @author    Markel Alvarado
  */
 
-rutasDeDirectorios();
+cargarDependencias();
 
 enviarALoginSiNoHaIniciadoSesion();
 
 $equipoDAO = new EquipoDAO();
 $error = $nombre = $estadio = "";
 
-list($nombre, $estadio, $error) = validacionDeIntroduccionDeEquipos($nombre, $estadio, $error, $equipoDAO);
+list($nombre, $estadio, $error) = procesarFormularioEquipo($equipoDAO);
 
 $equipos = $equipoDAO->selectAll();
 
@@ -112,7 +112,7 @@ $equipos = $equipoDAO->selectAll();
 /**
  * @return void
  */
-function rutasDeDirectorios(): void
+function cargarDependencias(): void
 {
     $rootDir = __DIR__;
     require_once $rootDir . '/templates/header.php';
@@ -132,19 +132,20 @@ function enviarALoginSiNoHaIniciadoSesion(): void
 
 
 /**
- * @param $nombre
- * @param $estadio
- * @param string $error
  * @param EquipoDAO $equipoDAO
- * @return array|void
+ * @return array
  */
-function validacionDeIntroduccionDeEquipos($nombre, $estadio, string $error, EquipoDAO $equipoDAO)
+function procesarFormularioEquipo(EquipoDAO $equipoDAO): array
 {
-    if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
-        $nombre = $_POST['nombre'];
-        $estadio = $_POST['estadio'];
+    $nombre = '';
+    $estadio = '';
+    $error = '';
 
-        if ($nombre == "" || $estadio == "") {
+    if (isset($_POST['action']) && $_POST['action'] == 'add_equipo') {
+        $nombre = trim($_POST['nombre'] ?? '');
+        $estadio = trim($_POST['estadio'] ?? '');
+
+        if (empty($nombre) || empty($estadio)) {
             $error = "Debes completar todos los campos.";
         } elseif ($equipoDAO->checkEquipoExists($nombre)) {
             $error = "Este equipo ya existe.";
@@ -153,9 +154,10 @@ function validacionDeIntroduccionDeEquipos($nombre, $estadio, string $error, Equ
                 header('Location: equipos.php');
                 exit();
             } else {
-                $error = "Error al añadir el equipo (quizás ya existe).";
+                $error = "Error al añadir el equipo.";
             }
         }
     }
-    return array($nombre, $estadio, $error);
+
+    return [$nombre, $estadio, $error];
 }

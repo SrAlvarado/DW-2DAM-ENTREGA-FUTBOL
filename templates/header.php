@@ -15,6 +15,31 @@ list($path_to_app, $path_to_assets, $path_to_root) = declaracionDeRutasUtilizada
 SessionHelper::startSessionIfNotStarted();
 $loggedin = SessionHelper::loggedIn();
 $user = $_SESSION['user'] ?? '(Invitado)';
+
+/**
+ * @return void
+ */
+function rutaASessionHelper(): void
+{
+    $dir = __DIR__;
+    require_once $dir . '/../utils/SessionHelper.php';
+}
+
+
+/**
+ * @return string[]
+ */
+function declaracionDeRutasUtilizadasEnElFichero(): array
+{
+    $current_folder = basename(dirname($_SERVER['PHP_SELF']));
+    $base_path = ($current_folder == 'app') ? '../' : './';
+
+    $path_to_app = $base_path . 'app/';
+    $path_to_assets = $base_path . 'assets/';
+    $path_to_root = $base_path;
+    return array($path_to_app, $path_to_assets, $path_to_root);
+}
+
 ?>
 <html lang="es">
 
@@ -92,35 +117,10 @@ else {
             </div>
         </div>
     </nav>
-    <?php
+<?php
 }
 ?>
 
 <script type="text/javascript" src="<?php echo $path_to_assets; ?>bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-<?php
-/**
- * @return void
- */
-function rutaASessionHelper(): void
-{
-    $dir = __DIR__;
-    require_once $dir . '/../utils/SessionHelper.php';
-}
-
-
-/**
- * @return string[]
- */
-function declaracionDeRutasUtilizadasEnElFichero(): array
-{
-    $current_folder = basename(dirname($_SERVER['PHP_SELF']));
-    $base_path = ($current_folder == 'app') ? '../' : './';
-
-    $path_to_app = $base_path . 'app/';
-    $path_to_assets = $base_path . 'assets/';
-    $path_to_root = $base_path;
-    return array($path_to_app, $path_to_assets, $path_to_root);
-}
